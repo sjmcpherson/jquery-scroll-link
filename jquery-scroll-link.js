@@ -12,14 +12,14 @@ $(document).ready(function() {
 
 anchor = {
 	init : function()  {
-		$("nav .menu a").click(function () {	
-			$("nav .menu li").removeClass("current");
+		$("nav a").click(function () {	
+			$("nav li").removeClass("current");
 			var li = $(this).closest("li");
 			li.addClass("current");
 			var destination = 0;
 			var url = window.location.pathname;
 			var filename = url.substring(url.lastIndexOf('/')+1);
-			//$("a[href='" + filename + "']").addClass("sel"); 			
+		
 			
 			if(filename == "index.html"){
 				if (li.is(':not(:first-child)')) {
