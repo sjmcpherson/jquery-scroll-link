@@ -18,12 +18,20 @@ $(function(){
 			var curFilename = curUrl.substring(curUrl.lastIndexOf('/')+1);	
 			
 		
-				$(window).scroll(function(e){
-					checkSelected($(window).scrollTop())
-				});
-
+				function bindScroll(){
+					$(window).scroll(function(e){
+						//bodyScroll();
+						checkSelected($(window).scrollTop());
+					});					
+				}
+				
+				bindScroll();
+				
+				function unbindScroll(){
+					$(window).unbind("scroll");
+				}
+	
 				function getScrollTop(elem){
-					console.log(elem);
 					//gets the id of the section header
 					//from the navigation's href e.g. ("#html")
 					var elementClick = elem.attr("href");
@@ -39,31 +47,48 @@ $(function(){
 		
 
 				navElements.click(function () {	
+					$(window).unbind("scroll");
 					var li = $(this).closest("li");
-
+					navElements.removeClass("current");		
+					//add current selected element.
+					$(this).addClass("current");
 					var destination = 0;
 		
-					console.log(curFilename);
 					if(curFilename == "index.php" || curFilename == ""){
 						if (li.is(':not(:first-child)')) {
 							destination = getScrollTop($(this));
 						}
 						console.log(destination);
-						$("html:not(:animated),body:not(:animated)").animate({ scrollTop: destination}, 1000,"easeOutExpo", function(){});
+						$("html,body").animate({ 
+							scrollTop: destination
+						}, 600,
+						"easeOutExpo", function()
+						{
+							bindScroll();
+						});
 						return false; 
 					}		 
 						
-				})							
-
+				})			
+								
+				  function bodyScroll() {			
+						if (scrollTimer != -1)
+							clearTimeout(scrollTimer);
+				
+						scrollTimer = window.setTimeout("scrollFinished()", 500);
+				  }
+				
+					function scrollFinished() {
+							checkSelected($(window).scrollTop())
+					}
 				// Go through each section to see if it's at the top.
 				// if it is add an active class
 				function checkSelected(scrolledTo){					
 					//How close the top has to be to the section.
-					var threshold = 100;
+					var threshold = 300;
 		
-					var i;
 					var scrollTop = 0;
-					for (i = 0; i < navElements.length; i++) {
+					for (var i = 0; i < navElements.length; i++) {
 						
 						//get next nav item
 						var navElement = $(navElements[i]);
@@ -78,6 +103,8 @@ $(function(){
 							navElements.removeClass("current");		
 							//add current selected element.
 							navElement.addClass("current");
+						}else{
+						
 						}
 				};		
 
