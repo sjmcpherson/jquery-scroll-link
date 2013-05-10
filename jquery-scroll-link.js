@@ -1,27 +1,35 @@
 $(function(){
 
 			//set global variables and cache DOM elements for reuse later
-			var nav = $('nav').first(),
+			var nav = $('ul').first(),
 				navElements = nav.find('a'),
 				navHref = navElements.attr("href"),
 				bookmarks = $('a[name]'),
 				curUrl = window.location.pathname,
 				curFilename = curUrl.substring(curUrl.lastIndexOf('/')+1),
+				offset = nav.height();	
 				//rolledUp = false;			
+				
+				
+				console.log(navElements);
+				console.log(navHref);				
+				console.log(bookmarks);
+				console.log(curUrl);							
+				console.log(curFilename);						
+				console.log("offset "+offset);
 				
 				//Binds Scroll Event to Browser Window
 				function bindScroll(){
 					$(window).scroll(function(e){
 						setScrollTimer();
 						var scrollPos = $(window).scrollTop();
-						if(curFilename == "index.php" || curFilename == ""){
+						//if(curFilename == "index.php" || curFilename == ""){
 							checkSelected(scrollPos);
-						}
+						//}
 						//checkHeaderFixed(scrollPos);
 					});					
 				}
 				bindScroll();				
-							
 				//Sets Timeout to limit the amount of Scroll Events taking place to improve performance			
 				function setScrollTimer(){
 					unbindScroll();
@@ -52,8 +60,6 @@ $(function(){
 					var elementClick = elem.attr("href");
 					var goClick = elementClick.substring(elementClick.lastIndexOf('#'));
 					
-					//Height of the navigation
-					var offset = 54;		
 					//Gets the distance from the top and 
 					//subtracts the height of the nav.
 					return $(goClick).offset().top - offset;
@@ -64,12 +70,11 @@ $(function(){
 				navElements.click(function () {	
 					$(window).unbind("scroll");
 					var li = $(this).closest("li");
-					navElements.removeClass("current");		
-					//Add current selected element.
-					$(this).addClass("current");
+					navElements.removeClass("active");		
+					//Add active selected element.
+					$(this).addClass("active");
 					var destination = 0;
 		
-					if(curFilename == "index.php" || curFilename == ""){
 						if (li.is(':not(:first-child)')) {
 							destination = getScrollTop($(this));
 						}
@@ -78,14 +83,14 @@ $(function(){
 							//checkHeaderFixed($(window).scrollTop());
 						});
 						return false; 
-					}		 
+
 						
 				})			
 								
 				// NOTE: Needs work on the Threshold Should be determined by the Window Height
 				// Go through each section to see if it's at the top. if it is add an active class
 				function checkSelected(scrolledTo){					
-					//How close to the bookmark the top of the Window needs to be to change the current nav button display
+					//How close to the bookmark the top of the Window needs to be to change the active nav button display
 					var threshold = 400;
 		
 					var scrollTop = 0;
@@ -102,9 +107,9 @@ $(function(){
 						//Check if section is at the top of the page.
 						if (scrolledTo > scrollTop - threshold && scrolledTo < scrollTop + threshold) {		
 							//Remove all selected elements
-							navElements.removeClass("current");		
+							navElements.removeClass("active");		
 							//Add current selected element.
-							navElement.addClass("current");
+							navElement.addClass("active");
 						}else{
 						
 						}
